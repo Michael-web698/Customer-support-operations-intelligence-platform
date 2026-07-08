@@ -40,7 +40,7 @@ def main():
     print(f"Generating {args.customers} customers...")
     customers = generate_customers(args.customers, start_date, end_date)
     
-    # 2. Generate Agents
+    # 2. Generate  AI Agents
     print(f"Generating {args.agents} agents...")
     agents = generate_agents(args.agents, start_date)
     
