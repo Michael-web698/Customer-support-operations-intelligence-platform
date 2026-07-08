@@ -1,0 +1,65 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: Staged customer records.
+    columns:
+      - name: customer_id
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_agents
+    description: Staged support agent records.
+    columns:
+      - name: agent_id
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_tickets
+    description: Staged ticket records.
+    columns:
+      - name: ticket_id
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+      - name: agent_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_agents')
+              field: agent_id
+
+  - name: stg_ticket_events
+    description: Staged ticket timeline events.
+    columns:
+      - name: event_id
+        tests:
+          - unique
+          - not_null
+      - name: ticket_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_tickets')
+              field: ticket_id
+
+  - name: stg_agent_daily_capacity
+    description: Staged agent daily capacity snapshots.
+    columns:
+      - name: agent_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_agents')
+              field: agent_id
+      - name: date
+        tests:
+          - not_null

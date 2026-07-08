@@ -1,0 +1,82 @@
+# ==============================================================================
+# Customer Support Operations Intelligence Platform - Synthetic Data Generator Config
+# ==============================================================================
+
+# Time Seasonality Factors
+seasonality:
+  weekend_volume_multiplier: 0.25 # Lower volume on weekends (25% of weekday load)
+  post_holiday_spike_multiplier: 1.8 # Spike in volume after major holidays
+  weekly_trend: [1.0, 1.05, 1.02, 0.98, 0.95, 0.25, 0.25] # Mon-Sun volume weights
+
+# Customer Segment Weights
+# Higher tier customers get routed faster but have higher expectations (lower CSAT tolerance)
+customer_segments:
+  Free:
+    volume_weight: 0.60
+    routing_speed_multiplier: 1.5 # Slower routing
+    base_csat_offset: 0.0
+  Pro:
+    volume_weight: 0.30
+    routing_speed_multiplier: 1.0
+    base_csat_offset: 0.2
+  Enterprise:
+    volume_weight: 0.10
+    routing_speed_multiplier: 0.4 # Fast routing (40% of standard queue time)
+    base_csat_offset: 0.4
+
+# Ticket Category Properties
+categories:
+  Billing:
+    volume_weight: 0.25
+    base_complexity: 1.0
+    base_escalation_prob: 0.05
+  Technical:
+    volume_weight: 0.35
+    base_complexity: 2.0 # More complex, takes longer to resolve
+    base_escalation_prob: 0.15
+  Login/Access:
+    volume_weight: 0.20
+    base_complexity: 0.5 # Simple issue
+    base_escalation_prob: 0.02
+  Product Feedback:
+    volume_weight: 0.10
+    base_complexity: 0.8
+    base_escalation_prob: 0.01
+  General:
+    volume_weight: 0.10
+    base_complexity: 0.7
+    base_escalation_prob: 0.03
+
+# Agent Seniority Multipliers
+# More senior agents resolve tickets faster and have a lower rate of customer reopens
+agent_seniority:
+  Junior:
+    resolution_speed_multiplier: 1.5 # 50% slower than base
+    reopen_probability_multiplier: 1.4
+    capacity_limit: 5 # Maximum recommended concurrent tickets
+  Mid:
+    resolution_speed_multiplier: 1.0
+    reopen_probability_multiplier: 1.0
+    capacity_limit: 8
+  Senior:
+    resolution_speed_multiplier: 0.6 # 40% faster than base
+    reopen_probability_multiplier: 0.5
+    capacity_limit: 12
+
+# Overload Effects
+# Defines how the system behaves when the number of open tickets exceeds agent capacity
+overload:
+  threshold_ratio: 1.2 # Active tickets / Capacity Limit ratio triggering overload state
+  first_response_delay_multiplier: 2.5 # FRT degrades under overload
+  resolution_delay_multiplier: 2.0 # Resolution time degrades under overload
+  sla_breach_probability_boost: 0.35 # Extra chance of breaching SLA targets
+  csat_degradation_multiplier: 0.85 # CSAT score degrades by 15% under overload
+
+# CSAT (Customer Satisfaction) scoring weights
+# CSAT is calculated out of 5 based on key operational factors
+csat:
+  base_score: 4.5
+  reopen_penalty: -0.8 # Penalty for each reopen
+  escalation_penalty: -0.6 # Penalty if ticket had to be escalated
+  resolution_delay_penalty_per_hour: -0.015 # Penalty for long resolution times
+  sla_breach_penalty: -1.2 # Severe penalty for breaching SLA

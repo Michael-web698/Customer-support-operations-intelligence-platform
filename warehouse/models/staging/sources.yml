@@ -1,0 +1,16 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    tables:
+      - name: raw_customers
+        description: Raw customer records including segment, region, and signup date.
+      - name: raw_agents
+        description: Raw support agent records containing name, seniority level, and shifts.
+      - name: raw_tickets
+        description: Raw accumulating snapshot ticket lifecycle records.
+      - name: raw_ticket_events
+        description: Raw transactional events log for all ticket status changes.
+      - name: raw_agent_daily_capacity
+        description: Daily snapshot records of agents working hours and workload capacities.

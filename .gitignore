@@ -1,0 +1,34 @@
+# OS files
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Environment configurations
+.env
+.env.local
+.env.development
+.env.staging
+.env.production
+
+# dbt
+target/
+dbt_packages/
+dbt_modules/
+logs/
+
+# IDE files
+.vscode/
+.idea/
+
+# Local data generator outputs
+data_generator/output/*
+!data_generator/output/.gitkeep

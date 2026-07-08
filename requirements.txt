@@ -1,0 +1,20 @@
+# Data foundations & manipulation
+pandas
+polars
+
+# Database adapter & ORM
+psycopg2-binary
+sqlalchemy
+
+# Transformations
+dbt-postgres
+
+# Machine Learning & Forecasting
+scikit-learn
+statsmodels
+prophet
+
+# Development & Testing
+pytest
+black
+flake8
