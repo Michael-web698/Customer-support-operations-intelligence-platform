@@ -1,0 +1,151 @@
+version: 2
+
+models:
+  - name: dim_date
+    description: Date dimension table.
+    columns:
+      - name: date_day
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_customer
+    description: Customer dimension table.
+    columns:
+      - name: customer_id
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_agent
+    description: Support agent dimension table.
+    columns:
+      - name: agent_id
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_category
+    description: Category dimension table.
+    columns:
+      - name: category_key
+        tests:
+          - unique
+          - not_null
+      - name: category_name
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_sla_policy
+    description: SLA policy targets dimension.
+    columns:
+      - name: sla_policy_key
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_channel
+    description: Channels dimension table.
+    columns:
+      - name: channel_key
+        tests:
+          - unique
+          - not_null
+      - name: channel_name
+        tests:
+          - unique
+          - not_null
+
+  - name: fact_ticket
+    description: Ticket fact table (accumulating snapshot).
+    columns:
+      - name: ticket_id
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customer')
+              field: customer_id
+      - name: agent_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_agent')
+              field: agent_id
+      - name: category_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_category')
+              field: category_key
+      - name: sla_policy_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_sla_policy')
+              field: sla_policy_key
+      - name: channel_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_channel')
+              field: channel_key
+      - name: created_date
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_day
+
+  - name: fact_ticket_event
+    description: Ticket transactional state-change events log.
+    columns:
+      - name: event_id
+        tests:
+          - unique
+          - not_null
+      - name: ticket_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('fact_ticket')
+              field: ticket_id
+      - name: event_date
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_day
+
+  - name: fact_agent_daily_capacity
+    description: Daily snapshot metrics of agent workload and availability.
+    columns:
+      - name: agent_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_agent')
+              field: agent_id
+      - name: date_day
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_day
+
+  - name: fact_daily_ticket_volume
+    description: Aggregated ticket counts by date and category.
+    columns:
+      - name: date_day
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_day
+      - name: category_name
+        tests:
+          - not_null
